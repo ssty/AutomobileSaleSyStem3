@@ -18,12 +18,12 @@ public class SignupActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_signup);
-
-        final EditText etage=(EditText) findViewById(R.id.etage);
         final EditText etname=(EditText) findViewById(R.id.etname);
-        final EditText etusername=(EditText) findViewById(R.id.etusername);
         final EditText etemail=(EditText) findViewById(R.id.etemail);
         final EditText etpassword=(EditText) findViewById(R.id.etpassword);
+        final EditText etconfirmpassword=(EditText) findViewById(R.id.etconfirmpassword);
+        final EditText etnumber=(EditText) findViewById(R.id.etnumber);
+
 
         final Button bregister=(Button) findViewById(R.id.bregister);
 

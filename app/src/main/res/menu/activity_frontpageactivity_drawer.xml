@@ -16,6 +16,16 @@
             android:id="@+id/nav_slideshow"
             android:icon="@android:drawable/star_off"
             android:title="Sell vehicles" />
+        <item
+            android:id="@+id/myprofile"
+            android:title="My Profile"
+            android:icon="@drawable/ic_person_black_24dp">
+        </item>
+        <item
+            android:id="@+id/editprofile"
+            android:title="Edit Profile"
+            android:icon="@drawable/ic_edit_black_24dp">
+        </item>
 
     </group>
 

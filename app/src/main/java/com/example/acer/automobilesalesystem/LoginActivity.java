@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        final EditText etusername=(EditText) findViewById(R.id.etusername);
+        final EditText etname=(EditText) findViewById(R.id.etname);
         final EditText etpassword=(EditText) findViewById(R.id.etpassword);
 
         final Button blogin=(Button) findViewById(R.id.blogin);

@@ -217,11 +217,12 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+      /*  if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -242,6 +243,10 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
         } else if (id == R.id.nav_manage) {
             Intent i=new Intent(frontpageactivity.this,AboutUs.class);
             startActivity(i);
+        } else if (id == R.id.myprofile) {
+            Intent it=new Intent(frontpageactivity.this,UserProfile.class);
+            startActivity(it);
+
         } else if (id == R.id.nav_share) {
             Intent myIntent = new Intent(Intent.ACTION_SEND);
             myIntent.setType("text/plain");

@@ -56,7 +56,9 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        flingContainer = (SwipeFlingAdapterView) findViewById(R.id.frame);
+        //-----------------------------------swippe---------------------------/
+
+       flingContainer = (SwipeFlingAdapterView) findViewById(R.id.frame);
 
         array = new ArrayList<>();
         array.add(new Data("https://www.nriol.com/images/toyota1.png", "Brand: Toyata \n Model : Toyota Corolla Altis" + '\n' +
@@ -291,9 +293,5 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
         Intent intent=new Intent(this,SellVehicle.class);
         startActivity(intent);
     }
-
-
-
-
 }
 

@@ -9,7 +9,17 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -27,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         //viewPager=(ViewPager)findViewById(R.id.viewPager);
         ViewPagerAdapter viewPagerAdapter=new ViewPagerAdapter(this);
 
-
+//-------------------------retrofit for Fetching JSON from URL----------------------------
 
 
         button = (Button) findViewById(R.id.blogin);

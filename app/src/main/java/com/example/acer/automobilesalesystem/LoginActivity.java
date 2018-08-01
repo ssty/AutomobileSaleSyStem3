@@ -99,11 +99,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean validateUser() {
-        boolean notFound = true;
+        boolean notFound = false;
         if (!TextUtils.isEmpty(etname.getText().toString().trim()) && !TextUtils.isEmpty(etpassword.getText().toString().trim())){
             for (LoginResponseModel users:this.userList){
                 if (users.username.equalsIgnoreCase(etname.getText().toString().trim())){
-                    if (users.password.equalsIgnoreCase(etpassword.getText().toString().trim())){
+                    if (users.username.equalsIgnoreCase(etpassword.getText().toString().trim())){
                         notFound = true;
                     }
                 }

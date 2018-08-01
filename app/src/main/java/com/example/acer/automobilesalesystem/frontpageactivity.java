@@ -89,12 +89,7 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
     }
 
     private void showSwipableVehicleList() {
-        ArrayList<VehicleResponseModel> tempList = new ArrayList<>();
-        tempList = vehicleList;
-        vehicleList = new ArrayList<>();
-        for (int i = 0; i < 10; i++){
-           vehicleList.add(tempList.get(0));
-        }
+
         adapter = new VehicleAdapter(vehicleList, frontpageactivity.this);
         flingContainer.setAdapter(adapter);
         progress.setVisibility(View.GONE);

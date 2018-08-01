@@ -8,11 +8,27 @@
 
 
     <!-- activity view -->
+
     <FrameLayout
         android:layout_width="match_parent"
 
         android:layout_height="match_parent"
         android:background="@drawable/background">
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+        <Button
+            android:id="@+id/btnNoVehicle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="There's no new vehicle right now"
+            android:background="@null"
+            android:visibility="gone"
+            android:layout_gravity="center"/>
 
 
         <com.lorentzos.flingswipe.SwipeFlingAdapterView
@@ -20,6 +36,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/background"
+            app:min_adapter_stack="1"
+            android:visibility="gone"
             app:rotation_degrees="15.5" />
 
     </FrameLayout>

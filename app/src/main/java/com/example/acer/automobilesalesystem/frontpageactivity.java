@@ -1,46 +1,47 @@
 package com.example.acer.automobilesalesystem;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.bumptech.glide.Glide;
+import android.widget.Toast;
+
+import com.example.acer.automobilesalesystem.models.VehicleResponseModel;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
+
 import java.util.ArrayList;
-import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class frontpageactivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     ViewPager viewPager;
     private Button button1;
     private Button button2;
-    public static MyAppAdapter myAppAdapter;
+    private ProgressBar progress;
     public static ViewHolder viewHolder;
     private ArrayList<Data> array;
     private SwipeFlingAdapterView flingContainer;
-
+    private VehicleAdapter adapter;
+    private ArrayList<VehicleResponseModel> vehicleList;
+    private Button btnNoNewVehicle;
 
 
     @Override
@@ -58,31 +59,47 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
 
         //-----------------------------------swippe---------------------------/
 
-       flingContainer = (SwipeFlingAdapterView) findViewById(R.id.frame);
+        flingContainer = (SwipeFlingAdapterView) findViewById(R.id.frame);
+        btnNoNewVehicle =  findViewById(R.id.btnNoVehicle);
+        progress = findViewById(R.id.progress);
+        this.vehicleList = new ArrayList<>();
+        getVehicleList();
 
-        array = new ArrayList<>();
-        array.add(new Data("https://www.nriol.com/images/toyota1.png", "Brand: Toyata \n Model : Toyota Corolla Altis" + '\n' +
-                "Variant : JS \n Price : Rs. 13.27 Lakh"));
-        array.add(new Data("https://www.nriol.com/images/toyota2.png", "Brand: Toyota \n Model :  Toyota Etios	 \n Variant : J (Petrol) \n		Price : Rs. 6.03 lakhs"));
-        array.add(new Data("https://www.nriol.com/images/toyota7.png", "Brand: Toyota \n Model : Toyota New Camry" + '\n' +
-                "Variant : 2.5 G AT (Petrol) \n Price : Rs. 30.28 Lakh"));
-        array.add(new Data("https://https://www.nriol.com/images/swift.png", "Brand: Hyundai \n Model :  Swift	 \n Variant : LXI(petrol) \n		Price : Rs. 6.03 lakhs"));
-        array.add(new Data("https://www.nriol.com/images/vitara-brezza.png", "Brand: Hyundai \n Model : Vitara Brezza" + '\n' +
-                "Variant : LDI(diesel) \n Price : Rs. 13.27 Lakh"));
-        array.add(new Data("https://www.nriol.com/images/aventador.png", "Brand: Lamborgini \n Model : Aventador 	 \n Variant : LP 700-4 Roadster(petrol)\n		Price : 7.39 Crores"));
-        array.add(new Data("https://www.nriol.com/images/huracan.png", "Model : Huracan" + '\n' +
-                "Variant : Performante(petrol) \n Price : Rs 4.38 Crores"));
-        array.add(new Data("https://www.nriol.com/images/urus.png", "Model :  Toyota Etios	 \n Variant : Twin-Turbo V8(petrol) \n		Price : Rs 3.35 Crores"));
-        array.add(new Data("https://www.nriol.com/images/toyota1.png", "Model : Toyota Corolla Altis" + '\n' +
-                "Variant : JS \n Price : Rs. 13.27 Lakh"));
-        array.add(new Data("https://www.nriol.com/images/toyota2.png", "Model :  Toyota Etios	 \n Variant : J (Petrol) \n		Price : Rs. 6.03 lakhs"));
-        array.add(new Data("https://www.nriol.com/images/toyota1.png", "Model : Toyota Corolla Altis" + '\n' +
-                "Variant : JS \n Price : Rs. 13.27 Lakh"));
-        array.add(new Data("https://www.nriol.com/images/toyota2.png", "Model :  Toyota Etios	 \n Variant : J (Petrol) \n		Price : Rs. 6.03 lakhs"));
+    }
 
+    private void getVehicleList() {
+        progress.setVisibility(View.VISIBLE);
+        flingContainer.setVisibility(View.GONE);
+        ApiService service = RetrofitSingleton.getApiService();
+        Call<ArrayList<VehicleResponseModel>> call = service.getVehicleList();
+        call.enqueue(new Callback<ArrayList<VehicleResponseModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<VehicleResponseModel>> call, Response<ArrayList<VehicleResponseModel>> response) {
+                if (response.isSuccessful()){
+                    vehicleList = response.body();
+                    showSwipableVehicleList();
+                }
+            }
 
-        myAppAdapter = new MyAppAdapter(array, frontpageactivity.this);
-        flingContainer.setAdapter(myAppAdapter);
+            @Override
+            public void onFailure(Call<ArrayList<VehicleResponseModel>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void showSwipableVehicleList() {
+        ArrayList<VehicleResponseModel> tempList = new ArrayList<>();
+        tempList = vehicleList;
+        vehicleList = new ArrayList<>();
+        for (int i = 0; i < 10; i++){
+           vehicleList.add(tempList.get(0));
+        }
+        adapter = new VehicleAdapter(vehicleList, frontpageactivity.this);
+        flingContainer.setAdapter(adapter);
+        progress.setVisibility(View.GONE);
+        flingContainer.setVisibility(View.VISIBLE);
+        adapter.notifyDataSetChanged();
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
@@ -91,8 +108,8 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
 
             @Override
             public void onLeftCardExit(Object dataObject) {
-                array.remove(0);
-                myAppAdapter.notifyDataSetChanged();
+                vehicleList.remove(0);
+                adapter.notifyDataSetChanged();
                 //Do something on the left!
                 //You also have access to the original object.
                 //If you want to use it just cast it (String) dataObject
@@ -101,13 +118,17 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
             @Override
             public void onRightCardExit(Object dataObject) {
 
-                array.remove(0);
-                myAppAdapter.notifyDataSetChanged();
+                vehicleList.remove(0);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onAdapterAboutToEmpty(int itemsInAdapter) {
+                if (itemsInAdapter < 1){
 
+                    btnNoNewVehicle.setVisibility(View.VISIBLE);
+                    flingContainer.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -129,7 +150,7 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
                 View view = flingContainer.getSelectedView();
                 view.findViewById(R.id.background).setAlpha(0);
 
-                myAppAdapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
             }
         });
     }
@@ -143,59 +164,7 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
 
     }
 
-    public class MyAppAdapter extends BaseAdapter {
 
-
-        public List<Data> parkingList;
-        public Context context;
-
-        private MyAppAdapter(List<Data> apps, Context context) {
-            this.parkingList = apps;
-            this.context = context;
-        }
-
-        @Override
-        public int getCount() {
-            return parkingList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-
-            View rowView = convertView;
-
-
-            if (rowView == null) {
-
-                LayoutInflater inflater = getLayoutInflater();
-                rowView = inflater.inflate(R.layout.item, parent, false);
-                // configure view holder
-                viewHolder = new ViewHolder();
-                viewHolder.DataText = (TextView) rowView.findViewById(R.id.bookText);
-                viewHolder.background = (FrameLayout) rowView.findViewById(R.id.background);
-                viewHolder.cardImage = (ImageView) rowView.findViewById(R.id.cardImage);
-                rowView.setTag(viewHolder);
-
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            viewHolder.DataText.setText(parkingList.get(position).getDescription() + "");
-
-            Glide.with(frontpageactivity.this).load(parkingList.get(position).getImagePath()).into(viewHolder.cardImage);
-
-            return rowView;
-        }
-    }
 
 
     @Override
@@ -239,15 +208,15 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
 
         } else if (id == R.id.nav_slideshow) {
             Intent intent;
-            intent = new Intent(frontpageactivity.this,SellVehicle.class);
+            intent = new Intent(frontpageactivity.this, SellVehicle.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_manage) {
-            Intent i=new Intent(frontpageactivity.this,AboutUs.class);
+            Intent i = new Intent(frontpageactivity.this, AboutUs.class);
             startActivity(i);
-        } else if (id == R.id.myprofile) {
-            Intent it=new Intent(frontpageactivity.this,UserProfile.class);
-            startActivity(it);
+//        } else if (id == R.id.myprofile) {
+//            Intent it=new Intent(frontpageactivity.this,UserProfile.class);
+//            startActivity(it);
 
         } else if (id == R.id.nav_share) {
             Intent myIntent = new Intent(Intent.ACTION_SEND);
@@ -270,10 +239,10 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
                 @Override
                 public void onClick(View v) {
                     if (mfeedback.getText().toString().isEmpty()) {
-                        Toast.makeText(frontpageactivity.this,"Please write something before you submit your feedback.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(frontpageactivity.this, "Please write something before you submit your feedback.", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(frontpageactivity.this, "Thank you for your feedback :)", Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(frontpageactivity.this,frontpageactivity.class);
+                        Intent i = new Intent(frontpageactivity.this, frontpageactivity.class);
                         startActivity(i);
                     }
 
@@ -289,8 +258,9 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public void openActivity4(){
-        Intent intent=new Intent(this,SellVehicle.class);
+
+    public void openActivity4() {
+        Intent intent = new Intent(this, SellVehicle.class);
         startActivity(intent);
     }
 }

@@ -42,6 +42,7 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
     private VehicleAdapter adapter;
     private ArrayList<VehicleResponseModel> vehicleList;
     private Button btnNoNewVehicle;
+    private MySharedPreference preference;
 
 
     @Override
@@ -56,11 +57,12 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        preference = new MySharedPreference(this);
 
         //-----------------------------------swippe---------------------------/
 
         flingContainer = (SwipeFlingAdapterView) findViewById(R.id.frame);
-        btnNoNewVehicle =  findViewById(R.id.btnNoVehicle);
+        btnNoNewVehicle = findViewById(R.id.btnNoVehicle);
         progress = findViewById(R.id.progress);
         this.vehicleList = new ArrayList<>();
         getVehicleList();
@@ -75,7 +77,7 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
         call.enqueue(new Callback<ArrayList<VehicleResponseModel>>() {
             @Override
             public void onResponse(Call<ArrayList<VehicleResponseModel>> call, Response<ArrayList<VehicleResponseModel>> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     vehicleList = response.body();
                     showSwipableVehicleList();
                 }
@@ -119,7 +121,7 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
 
             @Override
             public void onAdapterAboutToEmpty(int itemsInAdapter) {
-                if (itemsInAdapter < 1){
+                if (itemsInAdapter < 1) {
 
                     btnNoNewVehicle.setVisibility(View.VISIBLE);
                     flingContainer.setVisibility(View.GONE);
@@ -160,8 +162,6 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
     }
 
 
-
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -186,6 +186,8 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
       /*  if (id == R.id.action_settings) {
             return true;
         }*/
+      if (id == R.id.signout)
+          signoutClicked();
 
         return super.onOptionsItemSelected(item);
 
@@ -252,6 +254,17 @@ public class frontpageactivity extends AppCompatActivity implements NavigationVi
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void signoutClicked() {
+        preference.setKeyValues("isLoggedIn", false);
+        openLoginActivity();
+    }
+
+    private void openLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public void openActivity4() {

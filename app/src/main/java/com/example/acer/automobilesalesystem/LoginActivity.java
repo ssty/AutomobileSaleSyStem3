@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etpassword;
     private TextView tvRegisterLink;
     private ArrayList<LoginResponseModel> userList;
+    private MySharedPreference preference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         //viewPager=(ViewPager)findViewById(R.id.viewPager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
 
+
 //-------------------------retrofit for Fetching JSON from URL----------------------------
 
 
@@ -48,9 +50,14 @@ public class LoginActivity extends AppCompatActivity {
         etname = (EditText) findViewById(R.id.etname);
         etpassword = (EditText) findViewById(R.id.etpassword);
         tvRegisterLink = (TextView) findViewById(R.id.tvregister);
+        preference = new MySharedPreference(this);
+        if (preference.getBoolValues("isLoggedIn") == false) {
 
-        getTempUsers();
-        setupClickListeners();
+            getTempUsers();
+            setupClickListeners();
+        }else{
+            openActivity2();
+        }
 
 
     }
@@ -61,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<ArrayList<LoginResponseModel>>() {
             @Override
             public void onResponse(Call<ArrayList<LoginResponseModel>> call, Response<ArrayList<LoginResponseModel>> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     userList = response.body();
                 }
             }
@@ -80,9 +87,12 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 boolean validFields = validateUser();
                 if (validFields) {
+                    preference.setKeyValues("isLoggedIn", true);
                     Intent firstPage = new Intent(LoginActivity.this, frontpageactivity.class);
                     startActivity(firstPage);
-                }else{
+
+
+                } else {
                     Toast.makeText(LoginActivity.this, "Invalid credentials", Toast.LENGTH_LONG).show();
                     etpassword.setError("Invalid Password");
                 }
@@ -100,10 +110,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean validateUser() {
         boolean notFound = false;
-        if (!TextUtils.isEmpty(etname.getText().toString().trim()) && !TextUtils.isEmpty(etpassword.getText().toString().trim())){
-            for (LoginResponseModel users:this.userList){
-                if (users.username.equalsIgnoreCase(etname.getText().toString().trim())){
-                    if (users.username.equalsIgnoreCase(etpassword.getText().toString().trim())){
+        if (!TextUtils.isEmpty(etname.getText().toString().trim()) && !TextUtils.isEmpty(etpassword.getText().toString().trim())) {
+            for (LoginResponseModel users : this.userList) {
+                if (users.username.equalsIgnoreCase(etname.getText().toString().trim())) {
+                    if (users.username.equalsIgnoreCase(etpassword.getText().toString().trim())) {
                         notFound = true;
                     }
                 }

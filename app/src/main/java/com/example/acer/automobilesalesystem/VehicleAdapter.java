@@ -69,14 +69,14 @@ public class VehicleAdapter extends BaseAdapter {
         viewHolder.price.setText(vehicleList.get(position).price + "");
         viewHolder.description.setText(vehicleList.get(position).description + "");
 
-        if (vehicleList.get(position).image != null && vehicleList.get(position).image.equalsIgnoreCase(""))
+        if (vehicleList.get(position).image != null && !vehicleList.get(position).image.equalsIgnoreCase(""))
             Glide.with(context)
                     .load(vehicleList.get(position).image)
+                    .placeholder(R.mipmap.placeholder_vehicle)
                     .into(viewHolder.cardImage);
 
         return rowView;
     }
-
 
 
     public static class ViewHolder {

@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
 
             getTempUsers();
             setupClickListeners();
-        }else{
+        } else {
             openActivity2();
         }
 
@@ -90,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                     preference.setKeyValues("isLoggedIn", true);
                     Intent firstPage = new Intent(LoginActivity.this, frontpageactivity.class);
                     startActivity(firstPage);
+                    finish();
 
 
                 } else {
